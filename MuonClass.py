@@ -11,3 +11,9 @@ class Muon:
         self.m_e = None
         self.m_fvector = None
         self.m_imass = None
+    
+    def muons_collector(self, muon_info:str) -> list:
+        begin_index = muon_info.find("=")
+        end_index = muon_info.index("dptinv")
+        data_list = muon_info[begin_index+1:end_index].strip(" ").split(" ")
+        return data_list
