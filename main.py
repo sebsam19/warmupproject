@@ -15,8 +15,9 @@ invariant mass =
 
 
 todo:
-read input file - 
-read events in each file -
+read input file - done
+read events in each file - done
+find momentum , px, py, pz - in progress
 calculate 4 vector for each muon -
 calculate the invariant mass of the hyp particle -
 writes mass to another file -
@@ -38,7 +39,7 @@ questions:
 from EventClass import Event
 def main():
     file_input = input()
-    
+
     
 
 def file_sorting(file_name : str) -> list:
