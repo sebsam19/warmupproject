@@ -37,6 +37,8 @@ questions:
 3. limitations/format that you would want the program to be made
 """
 from EventClass import Event
+from MuonClass import Muon
+
 def main():
     file_input = input()
 
@@ -50,9 +52,12 @@ def file_sorting(file_name : str) -> list:
             if lines.startswith("Run"):
                 new_event = Event(lines.strip("\n"))
             elif lines.startswith("m1"):
-                new_event.muon_one_setter(lines)
+                new_muon = Muon(lines)
+                new_muon.muons_collector()
+                
             elif lines.startswith("m2"):
-                new_event.muon_two_setter(lines)
+                new_muon = Muon(lines)
+                new_muon.muons_collector()
                 event_objs.append(new_event)
     return event_objs
             
