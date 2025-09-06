@@ -1,29 +1,23 @@
 class Event:
+    """Event holds the event info, while also holding two different Muon objects"""
     def __init__(self, event:str):
         self.event = event
         self.muon_one = None
         self.muon_two = None
+        self.i_mass = None
 
-    def muon_one_setter(self, m1:str):
-        data_collected = self.muons_collector(m1)
-        self.m1_pt = data_collected[0]
-        self.m1_eta = data_collected[1]
-        self.m1_phi = data_collected[2]
-        self.m1_m = data_collected[3]
-        
+    def muon_one_setter(self, m1) -> None:
+        """sets up the first muon encountered"""
+        self.muon_one = m1
 
-    def muon_two_setter(self, m2:str):
-        data_collected = self.muons_collector(m2)
-        self.m2_pt = data_collected[0]
-        self.m2_eta = data_collected[1]
-        self.m2_phi = data_collected[2]
-        self.m2_m = data_collected[3]
+    def muon_two_setter(self, m2) -> None:
+        """sets up the second muon encountered"""
+        self.muon_two = m2
 
-    def momentum_formula(self) -> int:
-        """
-        px = pt cos theta (phi)
-        py = pt sin theta (phi)
-        pz = pt sinh(eta)
-
-        p = sqrt (px2 + py2 + pz2)
-        """
+    def i_mass_calc(self) -> None:
+        """calculates the invariant mass"""
+        self.i_mass = (self.muon_one.mass_getter() ** 2) + (self.muon_two.mass_getter() ** 2) + 2 * ((self.muon_one.energy_getter() * self.muon_two.energy_getter()) - (self.muon_one.momentum_getter() * self.muon_two.momentum_getter()))    
+    
+    def i_mass_getter(self) -> float:
+        """returns the invariant mass"""
+        return self.i_mass
