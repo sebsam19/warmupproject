@@ -41,4 +41,11 @@ class Muon:
         """
         self.m_e = math.sqrt((self.m_mass ** 2) + (self.m_mntm ** 2))
     
-    def 
+    def vector_calc(self) -> None:
+        self.m_fvector = self.m_mntm + self.m_e
+
+    def vector_getter(self) -> float:
+        return self.m_fvector
+    
+    def i_mass_getter(self) -> float:
+        return self.m_imass
