@@ -17,8 +17,9 @@ invariant mass =
 todo:
 read input file - done
 read events in each file - done
-find momentum , px, py, pz - in progress
-calculate 4 vector for each muon -
+find momentum , px, py, pz - done
+calculate 4 vector for each muon - done
+energy form - done
 calculate the invariant mass of the hyp particle -
 writes mass to another file -
 
@@ -41,6 +42,7 @@ from MuonClass import Muon
 
 def main():
     file_input = input()
+    
 
     
 
@@ -51,16 +53,19 @@ def file_sorting(file_name : str) -> list:
         for lines in data_file:
             if lines.startswith("Run"):
                 new_event = Event(lines.strip("\n"))
-            elif lines.startswith("m1"):
+            elif lines.startswith("m1") or lines.startswith("m2"):
                 new_muon = Muon(lines)
-                new_muon.muons_collector()
-                
-            elif lines.startswith("m2"):
-                new_muon = Muon(lines)
-                new_muon.muons_collector()
-                event_objs.append(new_event)
+                new_muon.muons_setters()
+                new_muon.momentum_calc()
+                new_muon.energy_calc()
+                new_muon.vector_calc()
+                if (lines.startswith("m1")):
+                    new_event.muon_one_setter(new_muon)
+                elif (lines.startswith("m2")):
+                    new_event.muon_two_setter(new_muon)
+                    event_objs.append(new_event)
     return event_objs
-            
+
 
 if __name__ == "__main__":
     main()
