@@ -34,4 +34,11 @@ class Muon:
         self.m_pz = self.m_pt * math.sinh(self.m_eta)
 
         self.m_mntm = math.sqrt((self.m_px ** 2) + (self.m_py ** 2) + (self.m_pz ** 2))
-        
+    
+    def energy_calc(self) -> None:
+        """
+        e = sqrt ( mass ^ 2 + mom ^ 2)
+        """
+        self.m_e = math.sqrt((self.m_mass ** 2) + (self.m_mntm ** 2))
+    
+    def 
