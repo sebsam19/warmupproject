@@ -12,7 +12,6 @@ class Muon:
         self.m_pz = None
         self.m_e = None
         self.m_fvector = None
-        self.m_imass = None
         self.m_mntm = None
     
     def muons_collector(self) -> list:
@@ -47,5 +46,11 @@ class Muon:
     def vector_getter(self) -> float:
         return self.m_fvector
     
-    def i_mass_getter(self) -> float:
-        return self.m_imass
+    def energy_getter(self) -> float:
+        return self.m_e
+    
+    def mass_getter(self) -> float:
+        return self.m_mass
+    
+    def momentum_getter(self) -> float:
+        return self.m_mntm
