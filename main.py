@@ -1,82 +1,65 @@
-"""
-formulas
-
-muon : pt = sqrt (px^2 + py^2)
-       phi = angle in xy plane
-       eta = pseudorapidity
-       mass = mass of muon
-
-E (energy) = sqrt (mass ^ 2 + momentum ^ 2)
-
-momentum + energy = lorentz vector
-
-invariant mass = 
-
-
-
-todo:
-read input file - done
-read events in each file - done
-find momentum , px, py, pz - done
-calculate 4 vector for each muon - done
-energy form - done
-calculate the invariant mass of the hyp particle -
-writes mass to another file -
-
-format:
-
-line 1 : event
-line 2 : ignore
-line 3 : info for muon 1
-line 4 : info for muon 2
-
-
-questions:
-
-1. Big M stands for momentum or mass?
-2. invariant mass formula?
-3. limitations/format that you would want the program to be made
-"""
-from EventClass import Event
-from MuonClass import Muon
+import math
 
 def main():
-    file_input = input()
-    list_of_events_output = file_sorting(file_input)
-    file_write(list_of_events_output)
+    input_file = input()
+    events_muons = file_reading(input_file)
+    file_writing(events_muons)
 
 
-def file_write(list_of_events: list) -> None:
-    """writes the invariant mass and the specific event to the file 'masses.txt'"""
-    with open("masses.txt", "w", encoding="utf-8") as output_file:
-        for event_objs in list_of_events:
-            event_objs.i_mass_calc()
-            output_file.write(f"{event_objs.event_info_getter()}: invariant mass = {event_objs.i_mass_getter()}\n")
-
-
-
-def file_sorting(file_name : str) -> list:
-    """file is read and then sorts out 'run', 'm1', and 'm2' to create event objects and 
-    its correlated muons, then returns a list of the event objects to be written into a file"""
-    event_objs = []
-    with open(file_name, 'r', encoding="utf-8") as data_file:
-        new_event = None
+def file_reading(file_name: str) -> list:
+    stored_events = []
+    with open(file_name, "r", encoding="utf-8") as data_file:
+        event_muons = []
         for lines in data_file:
             if lines.startswith("Run"):
-                new_event = Event(lines.strip("\n"))
+                event_muons.append(lines.strip("\n"))
             elif lines.startswith("m1") or lines.startswith("m2"):
-                new_muon = Muon(lines)
-                new_muon.muons_setters()
-                new_muon.momentum_calc()
-                new_muon.energy_calc()
-                new_muon.vector_calc()
-                if (lines.startswith("m1")):
-                    new_event.muon_one_setter(new_muon)
-                elif (lines.startswith("m2")):
-                    new_event.muon_two_setter(new_muon)
-                    event_objs.append(new_event)
-    return event_objs
+                begin_index = lines.find("=")
+                end_index = lines.find("dptinv")
+                extracted_data = lines[begin_index+1:end_index].split()
+                if lines.startswith("m1"):
+                    event_muons.append(extracted_data)
+                else:
+                    event_muons.append(extracted_data)
+                    stored_events.append(event_muons)
+                    event_muons = []
+    return stored_events
+
+def file_writing(event_muons : list) -> None:
+    with open("masses.txt", "w", encoding="utf-8") as output_file:
+        for events in event_muons:
+            momentum_one = momentum_calc(events[1])
+            momentum_two = momentum_calc(events[2])
+            energy_one = energy_calc(momentum_one, float(events[1][3]))
+            energy_two = energy_calc(momentum_two, float(events[2][3]))
+            f_vector_one = four_vector_calc(momentum_one, energy_one)
+            f_vector_two = four_vector_calc(momentum_two, energy_two)
+            invariant_mass = invariant_mass_calc(momentum_one, momentum_two, energy_one, energy_two)
+            output_file.write(f"{events[0]} : {invariant_mass}\n")
+
+
+def momentum_calc(event_data) -> tuple:
+    px = float(event_data[0]) * math.cos(float(event_data[2]))
+    py = float(event_data[0]) * math.sin(float(event_data[2]))
+    pz = float(event_data[0]) * math.sinh(float(event_data[1]))
+    return (px, py, pz)
+
+def energy_calc(momentum : tuple, mass : float) -> float:
+    momentum_squared = (momentum[0] ** 2) + (momentum[1] ** 2) + (momentum[2] ** 2)
+    mass_square = mass * mass
+    return math.sqrt(momentum_squared + mass_square)
+ 
+def four_vector_calc(momentum : tuple, energy : float) -> tuple:
+    return (energy, momentum[0], momentum[1], momentum[2])
+
+def invariant_mass_calc(m1 : tuple, m2 : tuple, e1 : float, e2 : float) -> float:
+    energies = (e1 + e2) ** 2
+    combined_m1 = (m1[0] + m2[0]) ** 2
+    combined_m2 = (m1[1] + m2[1]) ** 2
+    combined_m3 = (m1[2] + m2[2]) ** 2
+    total_m = combined_m1 + combined_m2 + combined_m3
+    return math.sqrt(energies - total_m)
 
 
 if __name__ == "__main__":
-    main()
+    main() 

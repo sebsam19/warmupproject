@@ -6,6 +6,10 @@ class Event:
         self.muon_two = None
         self.i_mass = None
 
+    def event_info_getter(self) -> str:
+        """returns event string to write into file"""
+        return self.event
+    
     def muon_one_setter(self, m1) -> None:
         """sets up the first muon encountered"""
         self.muon_one = m1
