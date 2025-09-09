@@ -5,7 +5,22 @@ def main():
     events_muons = file_reading(input_file)
     file_writing(events_muons)
 
+def file_read_write(file_name : str) -> None:
+    with open(file_name, "r", encoding="utf-8") as data_file, open("masses.txt", "w", encoding="utf-8") as output_file:
+        curr_event = []
+        for lines in data_file:
+            if lines.startswith("Run"):
+                curr_event.append(lines.strip("\n"))
+            elif lines.startswith("m1") or lines.startswith("m2"):
+                begin_index = lines.find("=")
+                end_index = lines.find("dptinv")
+                extracted_data = lines[begin_index+1:end_index].split()
+                if lines.startswith("m1"):
+                    curr_event.append(extracted_data)
+                else:
+                    curr_event.append(extracted_data)
 
+                    
 def file_reading(file_name: str) -> list:
     stored_events = []
     with open(file_name, "r", encoding="utf-8") as data_file:
